@@ -1,0 +1,10 @@
+{
+	"id": "sync-notion-to-obsidian",
+	"name": "Notion x Obsidian",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "This plugin grabs pages from Notion and syncs them to your Obsidian vault.",
+	"author": "Daniel Haven",
+	"authorUrl": "https://github.com/danielh-official",
+	"isDesktopOnly": false
+}

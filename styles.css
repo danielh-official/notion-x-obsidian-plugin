@@ -1,0 +1,13 @@
+/*
+
+This CSS file will be included with your plugin, and
+available in the app when your plugin is enabled.
+
+If your plugin does not need CSS, delete this file.
+
+*/
+
+div.secret textarea {
+	color: transparent;
+	text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
