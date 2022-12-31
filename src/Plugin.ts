@@ -24,8 +24,8 @@ export default class MyPlugin extends Plugin {
 			this.addSettingTab(new Settings(this.app, this));
 
 			this.addCommand({
-				id: "get-page-from-notion",
-				name: "Get Page From Notion",
+				id: "sync",
+				name: "Sync",
 				callback: async () => {
 					this.getNotionPageCommand.handle();
 				}
