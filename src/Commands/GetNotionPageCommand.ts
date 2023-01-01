@@ -1,5 +1,5 @@
 import MyPlugin from "../Plugin";
-import {App, Notice, TAbstractFile, TFile, TFolder, Vault} from "obsidian";
+import {App, Notice, Vault} from "obsidian";
 import {GetNotionResourceModal} from "../Modals/GetNotionResourceModal";
 import CreatePageFromNotionUrl from "../Misc/CreatePageFromNotionUrl";
 import {splitNotionUrl} from "../Misc/NotionHelpers";
@@ -20,10 +20,6 @@ export default class GetNotionPageCommand {
 		this.createPageFromNotionUrl = new CreatePageFromNotionUrl(this.app, this.plugin)
 	}
 
-	private modalLogic() {
-
-	}
-
 	handle() {
 		new GetNotionResourceModal(this.app, (result: string) => {
 			if (!result) {
@@ -34,8 +30,7 @@ export default class GetNotionPageCommand {
 				const splitUrl = splitNotionUrl(result);
 
 				this.createPageFromNotionUrl.callPageApi(splitUrl).then((apiResponse) => {
-					this.createPageFromNotionUrl.createHomeDirectoryIfNotExists().then(r => {
-
+					this.createPageFromNotionUrl.createHomeDirectoryIfNotExists().then(() => {
 						this.createPageFromNotionUrl.createFileFromPage(splitUrl, apiResponse.data);
 					}).catch((e: Error) => {
 						new Notice(e.message)
