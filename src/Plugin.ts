@@ -5,13 +5,14 @@ import {Settings} from "./Settings";
 
 const DEFAULT_SETTINGS = {
 	notionIntegrationTokenIndex: {},
-	homeFolder: "Notion"
+	homeFolder: "Notion",
+	notionIntegrationToken: ""
 };
 
 export default class MyPlugin extends Plugin {
 	getNotionPageCommand: GetNotionPageCommand;
 
-	settings: any;
+	settings: Settings;
 
 	proxyUrl = "http://127.0.0.1:6060";
 
