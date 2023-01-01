@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"outDir": "./dist",
 		"baseUrl": ".",
 		"inlineSourceMap": true,
 		"inlineSources": true,
@@ -17,10 +18,14 @@
 			"ES6",
 			"ES7"
 		],
-		"allowSyntheticDefaultImports": true,
-		"jsx": "react"
+		"jsx": "react",
+		"esModuleInterop": true,
+		"rootDir": "./src"
 	},
 	"include": [
-		"**/*.ts"
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modules"
 	]
 }
