@@ -1,5 +1,5 @@
 import MyPlugin from "../Plugin";
-import {App, TAbstractFile, TFile, TFolder, Vault} from "obsidian";
+import {App, Notice, TAbstractFile, TFile, TFolder, Vault} from "obsidian";
 import {GetNotionResourceModal} from "../Modals/GetNotionResourceModal";
 import CreatePageFromNotionUrl from "../Misc/CreatePageFromNotionUrl";
 
@@ -19,15 +19,32 @@ export default class GetNotionPageCommand {
 		this.createPageFromNotionUrl = new CreatePageFromNotionUrl(this.app, this.plugin)
 	}
 
+	private modalLogic() {
+
+	}
+
 	handle() {
 		new GetNotionResourceModal(this.app, (result: string) => {
 			if (!result) {
-				throw new Error("Please enter a URL.")
+				return new Notice("Please enter a URL.")
 			}
 
-			const splitUrl = this.createPageFromNotionUrl.splitNotionUrl(result);
+			try {
+				const splitUrl = this.createPageFromNotionUrl.splitNotionUrl(result);
 
-			this.createPageFromNotionUrl.createIfNotExists(splitUrl)
+				this.createPageFromNotionUrl.callPageApi(splitUrl).then((apiResponse) => {
+					this.createPageFromNotionUrl.createHomeDirectoryIfNotExists().then(r => {
+
+						this.createPageFromNotionUrl.createFileFromPage(splitUrl, apiResponse.data);
+					}).catch((e: Error) => {
+						new Notice(e.message)
+					})
+				}).catch((e: Error) => {
+					new Notice(e.message)
+				});
+			} catch (error: any) {
+				new Notice(error.message)
+			}
 		}).open();
 	}
 
