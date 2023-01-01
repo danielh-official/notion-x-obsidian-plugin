@@ -1,12 +1,10 @@
-import {trim} from "lodash";
-import {App, TAbstractFile, TFile, TFolder, Vault} from "obsidian";
+import {split, trim} from "lodash";
+import {App, Notice, TAbstractFile, TFile, TFolder, Vault} from "obsidian";
 import MyPlugin from "../Plugin";
-
-interface SplitNotionUrlInterface {
-	name: string;
-	id: string;
-	url: string;
-}
+import {MarkdownTemplate} from "../Views/MarkdownTemplate";
+import {renderToString} from 'react-dom/server'
+import axios, {AxiosResponse} from "axios";
+import {PageApiBodyInterface, SplitNotionUrlInterface} from "../Interfaces";
 
 export default class CreatePageFromNotionUrl {
 	plugin: MyPlugin;
@@ -19,49 +17,64 @@ export default class CreatePageFromNotionUrl {
 		this.plugin = plugin;
 		this.vault = app.vault;
 	}
-	private makeBody(splitUrl: SplitNotionUrlInterface) {
+
+	async callPageApi(splitUrl: SplitNotionUrlInterface): Promise<PageApiBodyInterface | any> {
+
+		const response = await axios.post(`${this.plugin.proxyUrl}/api/pages/show`, {
+			pageId: splitUrl.id,
+			notionIntegrationToken: this.plugin.settings.notionIntegrationToken
+		});
+
+		try {
+			return response;
+		} catch (e: any) {
+			throw new Error(e.message)
+		}
+	}
+
+	private makeBody(splitUrl: SplitNotionUrlInterface, data: PageApiBodyInterface) {
 		let url = trim(splitUrl.url);
 		let name = trim(splitUrl.name);
 		let id = trim(splitUrl.id);
 
-		const html = `<p><hr />URL: ${url}<br />ID: ${id}<br />Name: ${name}<hr /></p>`;
+		const html = renderToString(MarkdownTemplate(splitUrl, data));
 
 		let TurndownService = require('turndown')
 
 		let turndownService = new TurndownService({
-			hr: '---'
+			hr: '---',
+			headingStyle: 'atx',
+			bulletListMarker: '-'
 		})
 		return turndownService.turndown(html)
 	}
 
-	private create(splitUrl: SplitNotionUrlInterface) {
+	createFileFromPage(splitUrl: SplitNotionUrlInterface, apiResponseBody: PageApiBodyInterface) {
 
 		let file: TAbstractFile | null;
 		file = this.vault.getAbstractFileByPath(`${this.plugin.settings.homeFolder}/${splitUrl.name}.md`);
 
+		const body = this.makeBody(splitUrl, apiResponseBody);
+
 		if (file instanceof TFile) {
-			throw new Error("File already exists.")
+			this.vault.modify(file, body).then(r => {
+				new Notice(`Note was successfully modified from Notion: "${splitUrl.name}"`);
+			});
 		} else {
-			const body = this.makeBody(splitUrl);
-
-			console.log((body));
-
 			this.vault.create(`${this.plugin.settings.homeFolder}/${splitUrl.name}.md`, body).then(r => {
-				console.log('Success');
+				new Notice(`Note was successfully created from Notion: "${splitUrl.name}"`);
 			});
 		}
 	}
 
-	createIfNotExists(splitUrl: SplitNotionUrlInterface) {
+	async createHomeDirectoryIfNotExists(): Promise<void> {
 
 		let homeFolder: TAbstractFile | null;
 		homeFolder = this.vault.getAbstractFileByPath(this.plugin.settings.homeFolder);
 
-		if (homeFolder instanceof TFolder) {
-			this.create(splitUrl);
-		} else {
-			this.vault.createFolder(this.plugin.settings.homeFolder).then(r => {
-				this.create(splitUrl);
+		if (!(homeFolder instanceof TFolder)) {
+			await this.vault.createFolder(this.plugin.settings.homeFolder).catch((e: Error) => {
+				throw new Error(e.message)
 			});
 		}
 	}
@@ -97,7 +110,7 @@ export default class CreatePageFromNotionUrl {
 		const name = pathname.split('-')[0]?.replace('/', '');
 
 		if (!(name && id)) {
-			throw new Error("The url is missing a proper name and id pair (e.g., Home-1233re324e343).");
+			throw new Error("The url is missing a proper name and id pair in its path name (e.g., Example-1233re324e343).");
 		}
 
 		return {
