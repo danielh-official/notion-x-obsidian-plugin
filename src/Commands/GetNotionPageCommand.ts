@@ -2,6 +2,7 @@ import MyPlugin from "../Plugin";
 import {App, Notice, TAbstractFile, TFile, TFolder, Vault} from "obsidian";
 import {GetNotionResourceModal} from "../Modals/GetNotionResourceModal";
 import CreatePageFromNotionUrl from "../Misc/CreatePageFromNotionUrl";
+import {splitNotionUrl} from "../Misc/NotionHelpers";
 
 export default class GetNotionPageCommand {
 	plugin: MyPlugin;
@@ -30,7 +31,7 @@ export default class GetNotionPageCommand {
 			}
 
 			try {
-				const splitUrl = this.createPageFromNotionUrl.splitNotionUrl(result);
+				const splitUrl = splitNotionUrl(result);
 
 				this.createPageFromNotionUrl.callPageApi(splitUrl).then((apiResponse) => {
 					this.createPageFromNotionUrl.createHomeDirectoryIfNotExists().then(r => {
