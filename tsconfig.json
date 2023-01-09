@@ -20,7 +20,6 @@
 		],
 		"jsx": "react",
 		"esModuleInterop": true,
-		"rootDir": "./src"
 	},
 	"include": [
 		"src/**/*"
