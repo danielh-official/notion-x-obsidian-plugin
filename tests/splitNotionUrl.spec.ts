@@ -17,22 +17,9 @@ describe('text w/o notion.so is given', function () {
 	})
 });
 
-describe('split notion url', () => {
-	describe('if text w/o notion.so is given, throw error', function () {
+describe('text has notion.so but is missing name or id', function () {
 
-		try {
-			splitNotionUrl("test")
-
-			fail("Error was not thrown.")
-		} catch (e) {
-			it('should throw notion.so error', function () {
-				equal(e.message,
-					"The url must be from 'notion.so'.");
-			});
-		}
-	});
-
-	describe('if text has notion.so but is missing name or id, throw error', function () {
+	it("should throw error", () => {
 		try {
 			splitNotionUrl("http://www.notion.so/test")
 
@@ -44,8 +31,11 @@ describe('split notion url', () => {
 			});
 		}
 	})
+})
 
-	describe('if text has notion.so and name-id pair, return object', function () {
+describe('text has notion.so and name-id pair', () => {
+
+	it('should return object', function () {
 		const result = splitNotionUrl("https://www.notion.so/test-123")
 
 		it('should return object', function () {
