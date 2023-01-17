@@ -11,7 +11,7 @@
 	},
 	"directories": {
 		"src": "./src",
-		"test": "./src",
+		"test": "./tests",
 		"lib": "./dist"
 	},
 	"keywords": [],
