@@ -1,6 +1,22 @@
 import {equal, fail, deepEqual} from "assert";
 import {splitNotionUrl} from "../src/Misc/NotionHelpers";
 
+describe('text w/o notion.so is given', function () {
+
+	it('should throw error', () => {
+		try {
+			splitNotionUrl("test")
+
+			fail("Error was not thrown.")
+		} catch (e) {
+			it('should throw notion.so error', function () {
+				equal(e.message,
+					"The url must be from 'notion.so'.");
+			});
+		}
+	})
+});
+
 describe('split notion url', () => {
 	describe('if text w/o notion.so is given, throw error', function () {
 
