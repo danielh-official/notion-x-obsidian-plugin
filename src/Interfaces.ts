@@ -28,9 +28,9 @@ export interface PageApiBodyInterface {
 	archived: boolean | null;
 	url: string;
 	properties: {
-		title: {
-			id: 'title',
-			type: 'title',
+		Name: {
+			id: string;
+			type: string;
 			title: [
 				{
 					annotations: {
@@ -39,6 +39,7 @@ export interface PageApiBodyInterface {
 						strikethrough: boolean,
 						color: "default",
 						underline: boolean,
+						code: boolean
 					},
 					href: string,
 					plain_text: string,
@@ -47,10 +48,72 @@ export interface PageApiBodyInterface {
 						link: string | null,
 					},
 					type: "text"
-				},
-			]
+				}
+			],
 		}
 	};
+}
+
+export interface CommonPropertyInterface {
+	id: string;
+	type: 'multi_select' | 'select' | 'number' | 'people' | 'date' | 'formula' | 'relation' | 'rich_text' | 'checkbox' | 'rollup' | 'url' | 'title';
+	multi_select?: {
+		id: string;
+		name: string;
+		color: string;
+	}[];
+
+	select?: {
+		id: string;
+		name: string;
+		color: string;
+	}
+
+	number?: number;
+
+	people?: {
+		object: string;
+		id: string;
+		name: string;
+		avatar_url: string;
+		type: "person";
+		person?: {
+			email: string;
+		}
+	}[];
+
+	date?: {
+		start: string;
+		end: string | null;
+		time_zone: string | null;
+	};
+
+	formula?: {
+		type: string;
+		number: number;
+	}
+
+	relation?: {
+		id: string;
+	}[];
+
+	rich_text?: {
+		type: string;
+		text: {
+			content: string;
+			link: string | null;
+		};
+		annotations: {
+			bold: boolean,
+			italic: boolean,
+			strikethrough: boolean,
+			color: "default",
+			underline: boolean,
+			code: boolean
+		},
+		href: string,
+		plain_text: string,
+	}[];
 }
 
 export interface SplitNotionUrlInterface {
