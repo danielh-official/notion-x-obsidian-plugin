@@ -1,8 +1,9 @@
 import MyPlugin from "../Plugin";
 import {App, Notice, Vault} from "obsidian";
 import {GetNotionResourceModal} from "../Modals/GetNotionResourceModal";
-import CreatePageFromNotionUrl from "../Misc/CreatePageFromNotionUrl";
+import CreateNoteFromNotionPage from "../Misc/CreateNoteFromNotionPage";
 import {splitNotionUrl} from "../Misc/NotionUrlSplitter";
+import {callPageApi} from "../Misc/NotionApi";
 
 export default class GetNotionPageCommand {
 	plugin: MyPlugin;
@@ -10,14 +11,14 @@ export default class GetNotionPageCommand {
 
 	app: App;
 
-	createPageFromNotionUrl: CreatePageFromNotionUrl;
+	createPageFromNotionUrl: CreateNoteFromNotionPage;
 
 	constructor(app: App, plugin: MyPlugin) {
 		this.app = app;
 		this.plugin = plugin;
 		this.vault = app.vault;
 
-		this.createPageFromNotionUrl = new CreatePageFromNotionUrl(this.app, this.plugin)
+		this.createPageFromNotionUrl = new CreateNoteFromNotionPage(this.plugin)
 	}
 
 	handle() {
@@ -29,7 +30,7 @@ export default class GetNotionPageCommand {
 			try {
 				const splitUrl = splitNotionUrl(result);
 
-				this.createPageFromNotionUrl.callPageApi(splitUrl).then((apiResponse) => {
+				callPageApi(splitUrl, this.plugin.proxyUrl, this.plugin.settings.notionIntegrationToken).then((apiResponse) => {
 					this.createPageFromNotionUrl.createHomeDirectoryIfNotExists().then(() => {
 						this.createPageFromNotionUrl.createFileFromPage(splitUrl, apiResponse.data);
 					}).catch((e: Error) => {
