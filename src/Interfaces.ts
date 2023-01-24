@@ -54,9 +54,11 @@ export interface PageApiBodyInterface {
 	};
 }
 
-export interface CommonPropertyInterface {
+export interface CommonPropertyInterface extends Object {
 	id: string;
 	type: 'multi_select' | 'select' | 'number' | 'people' | 'date' | 'formula' | 'relation' | 'rich_text' | 'checkbox' | 'rollup' | 'url' | 'title';
+	checkbox?: boolean;
+
 	multi_select?: {
 		id: string;
 		name: string;
