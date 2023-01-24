@@ -6,6 +6,9 @@ import {renderToString} from 'react-dom/server'
 import {PageApiBodyInterface, SplitNotionUrlInterface} from "../Interfaces";
 import axios from "axios";
 
+/**
+ * Handles page creation logic.
+ */
 export default class CreatePageFromNotionUrl {
 	plugin: MyPlugin;
 	vault: Vault;
@@ -36,6 +39,12 @@ export default class CreatePageFromNotionUrl {
 		}
 	}
 
+	/**
+	 * Responsible for generating HTML that will be used in the note's body.
+	 * @param splitUrl
+	 * @param data
+	 * @private
+	 */
 	private makeBody(splitUrl: SplitNotionUrlInterface, data: PageApiBodyInterface) {
 		trim(splitUrl.url);
 
@@ -52,6 +61,11 @@ export default class CreatePageFromNotionUrl {
 		return turndownService.turndown(html)
 	}
 
+	/**
+	 * Handles the creation of the new note.
+	 * @param splitUrl
+	 * @param apiResponseBody
+	 */
 	createFileFromPage(splitUrl: SplitNotionUrlInterface, apiResponseBody: PageApiBodyInterface) {
 
 		let file: TAbstractFile | null;
@@ -71,6 +85,9 @@ export default class CreatePageFromNotionUrl {
 		}
 	}
 
+	/**
+	 * Creates the home directory if the not present.
+	 */
 	async createHomeDirectoryIfNotExists(): Promise<void> {
 
 		let homeFolder: TAbstractFile | null;
