@@ -10,27 +10,68 @@ import {
 	wrapInBold
 } from "../Misc/MarkdownHelpers";
 
-const createPropertiesArray = (pageResponseBody: PageApiBodyInterface): Array<CommonPropertyInterface> => {
+type Entries<T> = {
+	[K in keyof T]: [K, T[K]];
+}[keyof T][];
+
+/**
+ * Generates an array of properties to be used in the metadata.
+ * @param pageResponseBody
+ */
+const createPropertiesArray = (pageResponseBody: PageApiBodyInterface): Entries<object> => {
 
 	// @ts-ignore
-	return Object.values(pageResponseBody.properties);
+	return Object.entries(pageResponseBody.properties);
 }
 
+/**
+ * Parses each property based on its type.
+ * @param key
+ * @param property
+ */
 const parseProperty =
-	(property: CommonPropertyInterface) => {
+	(key: string, property: CommonPropertyInterface) => {
 		if (property.type == 'multi_select' && property.multi_select) {
-			return `${property.multi_select.map(x => x.name).join(', ')}`;
+			return `${key}: ${property.multi_select.map(x => x.name).join(', ')}`;
+		} else if (property.type == 'select' && property.select) {
+			return `${key}: ${property.select.name}`;
+		} else if (property.type == 'checkbox' && property.hasOwnProperty('checkbox')) {
+			return `${key}: ${property.checkbox ? "True" : "False"}`;
+		} else if (property.type == 'number' && property.hasOwnProperty('number')) {
+			return `${key}: ${property.number}`;
+		} else if (property.type == 'date' && property.hasOwnProperty('date')) {
+			const startDate = property.date?.start;
+			const endDate = property.date?.end;
+			const timezone = property.date?.time_zone;
+
+			const dateFormat = 'MMMM Do, YYYY';
+
+			let dateString = moment(startDate).format(dateFormat);
+
+			if (endDate) {
+				dateString += " - " + moment(endDate).format(dateFormat);
+			}
+
+			if (timezone) {
+				dateString += `(${timezone})`;
+			}
+
+			return `${key}: ${dateString}`;
 		}
 	}
 
+/**
+ * Creates a list of properties in the metadata.
+ * @param pageResponseBody
+ */
 const propertiesMetadata = (pageResponseBody: PageApiBodyInterface) => {
 	if (pageResponseBody.properties) {
 		return (
-			<li>
+			<li key={pageResponseBody.id}>
 				Properties
 				<ul>
-					{createPropertiesArray(pageResponseBody).map(property => (
-						<li>{parseProperty(property)}</li>
+					{createPropertiesArray(pageResponseBody).map((property) => (
+						<li key={property[0]}>{parseProperty(property[0], property[1])}</li>
 					))
 					}
 				</ul>
@@ -39,6 +80,12 @@ const propertiesMetadata = (pageResponseBody: PageApiBodyInterface) => {
 	}
 }
 
+/**
+ * Generates the metadata for the note.
+ * @param splitUrl
+ * @param pageResponseBody
+ * @constructor
+ */
 const Metadata = (splitUrl: SplitNotionUrlInterface, pageResponseBody: PageApiBodyInterface) => {
 	return (
 		<div>
@@ -67,6 +114,10 @@ const Metadata = (splitUrl: SplitNotionUrlInterface, pageResponseBody: PageApiBo
 	);
 }
 
+/**
+ * Parses the title from the Notion page json
+ * @param pageResponseBody
+ */
 const parseTitle = (pageResponseBody: PageApiBodyInterface) => {
 	let title = "";
 
@@ -94,10 +145,20 @@ const parseTitle = (pageResponseBody: PageApiBodyInterface) => {
 	}
 }
 
+/**
+ * Gets the cover image from the Notion page json.
+ * @param pageResponseBody
+ */
 const getNotionCoverImage = (pageResponseBody: PageApiBodyInterface): string => {
 	return pageResponseBody.cover ? pageResponseBody.cover?.external.url : "";
 }
 
+/**
+ * Builds the body of the template.
+ * @param splitUrl
+ * @param pageResponseBody
+ * @constructor
+ */
 export const MarkdownTemplate = (splitUrl: SplitNotionUrlInterface, pageResponseBody: PageApiBodyInterface) => {
 	return (
 		<div>
