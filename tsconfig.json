@@ -22,7 +22,9 @@
 		"esModuleInterop": true,
 	},
 	"include": [
-		"src/**/*"
+		"src/**/*",
+		"tests/**/*",
+		"main.ts"
 	],
 	"exclude": [
 		"node_modules"
