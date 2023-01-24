@@ -2,7 +2,7 @@ import MyPlugin from "../Plugin";
 import {App, Notice, Vault} from "obsidian";
 import {GetNotionResourceModal} from "../Modals/GetNotionResourceModal";
 import CreatePageFromNotionUrl from "../Misc/CreatePageFromNotionUrl";
-import {splitNotionUrl} from "../Misc/NotionHelpers";
+import {splitNotionUrl} from "../Misc/NotionUrlSplitter";
 
 export default class GetNotionPageCommand {
 	plugin: MyPlugin;
@@ -38,7 +38,7 @@ export default class GetNotionPageCommand {
 				}).catch((e: Error) => {
 					new Notice(e.message)
 				});
-			} catch (error: any) {
+			} catch (error) {
 				new Notice(error.message)
 			}
 		}).open();
