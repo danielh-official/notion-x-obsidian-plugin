@@ -1,6 +1,6 @@
 import GetNotionPageCommand from "./Commands/GetNotionPageCommand";
 
-import {App, Editor, MarkdownView, Plugin} from "obsidian";
+import {Plugin} from "obsidian";
 import {Settings} from "./Settings";
 
 const DEFAULT_SETTINGS = {
@@ -14,14 +14,15 @@ export default class MyPlugin extends Plugin {
 
 	settings: Settings;
 
-	proxyUrl = "http://127.0.0.1:6060";
+	proxyUrl = "https://bbc9758b-eff2-437f-8bd2-4750a49cc93e.mock.pstmn.io";
 
 	async onload() {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		require("dotenv").config();
 
 		this.getNotionPageCommand = new GetNotionPageCommand(app, this);
 
-		await this.loadSettings().then(response => {
+		await this.loadSettings().then(() => {
 			this.addSettingTab(new Settings(this.app, this));
 
 			this.addCommand({
