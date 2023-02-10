@@ -30,9 +30,16 @@ export default class GetNotionPageCommand {
 			try {
 				const splitUrl = splitNotionUrl(result);
 
-				callPageApi(splitUrl, this.plugin.proxyUrl, this.plugin.settings.notionIntegrationToken).then((apiResponse) => {
+				callPageApi(splitUrl, this.plugin.settings.notionIntegrationToken).then((apiResponse) => {
+
 					this.createPageFromNotionUrl.createHomeDirectoryIfNotExists().then(() => {
-						this.createPageFromNotionUrl.createFileFromPage(splitUrl, apiResponse.data);
+
+						if(apiResponse) {
+							this.createPageFromNotionUrl.createFileFromPage(splitUrl, apiResponse.data);
+						} else {
+							throw new Error('No response was returned.')
+						}
+
 					}).catch((e: Error) => {
 						new Notice(e.message)
 					})
