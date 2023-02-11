@@ -1,11 +1,11 @@
 import {SplitNotionUrlInterface} from "../Interfaces";
 import axios from "axios";
 import {
-	mockProxyIsEnabled,
+	mockProxyApiPageCallResponseStatusCode,
 	mockProxyApiToken,
+	mockProxyIsEnabled,
 	mockProxyURL,
-	proxyURL,
-	mockProxyApiPageCallResponseStatusCode
+	proxyURL
 } from '../Config/Config';
 
 /**
@@ -20,23 +20,17 @@ async function callPostmanMockApi(splitUrl: SplitNotionUrlInterface, token: stri
 	}
 
 	axios.defaults.headers.common = {
-		"X-API-Key": mockProxyApiToken,
+		"X-API-Key": mockProxyApiToken(),
 	};
 
 	const config = {
 		method: 'post',
 		maxBodyLength: Infinity,
-		url: `${mockProxyURL}/api/pages/show?status=${mockProxyApiPageCallResponseStatusCode}`,
+		url: `${mockProxyURL()}/api/pages/show?status=${mockProxyApiPageCallResponseStatusCode().toString()}`,
 		data: data
 	};
 
-	const response = await axios(config);
-
-	try {
-		return response;
-	} catch (e) {
-		throw new Error(e.message)
-	}
+	return axios(config);
 }
 
 /**
@@ -45,26 +39,19 @@ async function callPostmanMockApi(splitUrl: SplitNotionUrlInterface, token: stri
  * @param token
  */
 async function callProductionApi(splitUrl: SplitNotionUrlInterface, token: string) {
-	const response = await axios.post(`${proxyURL}/api/pages/show`, {
+	return await axios.post(`${proxyURL()}/api/pages/show`, {
 		pageId: splitUrl.id,
 		notionIntegrationToken: token
 	});
-
-	try {
-		return response;
-	} catch (e) {
-		throw new Error(e.message)
-	}
 }
 
 /**
  * Calls the api to get the page json response.
  * @param splitUrl : SplitNotionUrlInterface
- * @param rootUrl : string
  * @param token : string
  */
 async function callPageApi(splitUrl: SplitNotionUrlInterface, token: string) {
-	if (mockProxyIsEnabled) {
+	if (mockProxyIsEnabled()) {
 		return await callPostmanMockApi(splitUrl, token);
 	} else {
 		return await callProductionApi(splitUrl, token);
