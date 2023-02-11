@@ -3,7 +3,7 @@ import {assert} from "chai";
 
 
 describe('notion url splitter', () => {
-	describe('text w/o notion.so is given', function () {
+	context('text w/o notion.so is given', function () {
 		it('should throw an exception', () => {
 			try {
 				splitNotionUrl("test")
@@ -18,7 +18,7 @@ describe('notion url splitter', () => {
 		})
 	});
 
-	describe('text has notion.so but is missing name or id', function () {
+	context('text has notion.so but is missing name or id', function () {
 		it('should throw an exception', () => {
 			try {
 				splitNotionUrl("https://www.notion.so/test")
@@ -33,11 +33,11 @@ describe('notion url splitter', () => {
 		})
 	});
 
-	describe('text has notion.so and name-id pair', () => {
+	context('text has notion.so and name-id pair', () => {
+
+		const result = splitNotionUrl("https://www.notion.so/test-123")
 
 		it('should return object', function () {
-			const result = splitNotionUrl("https://www.notion.so/test-123")
-
 			assert.deepEqual(result,
 				{
 					name: "test",
@@ -47,11 +47,11 @@ describe('notion url splitter', () => {
 		})
 	});
 
-	describe('text has notion.so and name-id pair with two dashes', () => {
+	context('text has notion.so and name-id pair with two dashes', () => {
+
+		const result = splitNotionUrl("https://www.notion.so/test-two-123")
 
 		it('should return object', function () {
-			const result = splitNotionUrl("https://www.notion.so/test-two-123")
-
 			assert.deepEqual(result,
 				{
 					name: "test-two",
