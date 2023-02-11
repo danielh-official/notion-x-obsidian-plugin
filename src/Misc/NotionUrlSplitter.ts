@@ -1,6 +1,26 @@
 import {SplitNotionUrlInterface} from "../Interfaces";
 
 /**
+ * Separates the url into several components.
+ */
+interface ParsedUrl {
+	protocol: string;
+	slashes: boolean;
+	auth: string;
+	username: string;
+	password: string;
+	host: string;
+	hostname: string;
+	port: string;
+	pathname: string;
+	query: object;
+	hash: string;
+	href: string;
+	origin: string;
+}
+
+/**
+ * Parses a Notion URL into a @interface ParsedUrl.
  * @throws Error
  * @param url
  */
@@ -8,21 +28,7 @@ function parseUrl(url: string) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const UrlParse = require('url-parse');
 
-	const parsedUrl: {
-		protocol: string;
-		slashes: boolean;
-		auth: string;
-		username: string;
-		password: string;
-		host: string;
-		hostname: string;
-		port: string;
-		pathname: string;
-		query: object;
-		hash: string;
-		href: string;
-		origin: string;
-	} = new UrlParse(url);
+	const parsedUrl: ParsedUrl = new UrlParse(url);
 
 	if (!(parsedUrl.hostname == 'notion.so' || parsedUrl.hostname == 'www.notion.so')) {
 		throw new Error("The url must be from 'notion.so'.");

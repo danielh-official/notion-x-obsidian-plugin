@@ -6,11 +6,24 @@ import {splitNotionUrl} from "../Misc/NotionUrlSplitter";
 import {callPageApi} from "../Misc/NotionApi";
 
 export default class GetNotionPageCommand {
+	/**
+	 * An accessor for the plugin.
+	 */
 	plugin: MyPlugin;
+
+	/**
+	 * An accessor for the vault.
+	 */
 	vault: Vault;
 
+	/**
+	 * An accessor for the app.
+	 */
 	app: App;
 
+	/**
+	 * An accessor for createPageFromNotionUrl.
+	 */
 	createPageFromNotionUrl: CreateNoteFromNotionPage;
 
 	constructor(app: App, plugin: MyPlugin) {
@@ -21,6 +34,9 @@ export default class GetNotionPageCommand {
 		this.createPageFromNotionUrl = new CreateNoteFromNotionPage(this.plugin)
 	}
 
+	/**
+	 * Handles the command logic.
+	 */
 	handle() {
 		new GetNotionResourceModal(this.app, (result: string) => {
 			if (!result) {
@@ -28,6 +44,9 @@ export default class GetNotionPageCommand {
 			}
 
 			try {
+				/**
+				 * The split Notion url via the @interface SplitNotionUrlInterface.
+				 */
 				const splitUrl = splitNotionUrl(result);
 
 				callPageApi(splitUrl, this.plugin.settings.notionIntegrationToken).then((apiResponse) => {

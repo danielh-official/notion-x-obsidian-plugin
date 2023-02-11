@@ -1,10 +1,9 @@
 import {trim} from "lodash";
-import {App, Notice, TAbstractFile, TFile, TFolder, Vault} from "obsidian";
+import {Notice, TAbstractFile, TFile, TFolder, Vault} from "obsidian";
 import MyPlugin from "../Plugin";
 import {MarkdownTemplate} from "../Views/MarkdownTemplate";
 import {renderToString} from 'react-dom/server'
 import {PageApiBodyInterface, SplitNotionUrlInterface} from "../Interfaces";
-import axios from "axios";
 
 /**
  * Handles page creation logic.

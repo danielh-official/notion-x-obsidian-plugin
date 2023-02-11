@@ -1,3 +1,6 @@
+/**
+ * The interface for the page contents returned from the api.
+ */
 export interface PageApiBodyInterface {
 	object: "page";
 	id: string;
@@ -54,6 +57,9 @@ export interface PageApiBodyInterface {
 	};
 }
 
+/**
+ * Common attributes used for a property within the @interface PageApiBodyInterface properties.
+ */
 export interface CommonPropertyInterface extends Object {
 	id: string;
 	type: 'multi_select' | 'select' | 'number' | 'people' | 'date' | 'formula' | 'relation' | 'rich_text' | 'checkbox' | 'rollup' | 'url' | 'title';
@@ -118,6 +124,9 @@ export interface CommonPropertyInterface extends Object {
 	}[];
 }
 
+/**
+ * The interface for a split Notion url.
+ */
 export interface SplitNotionUrlInterface {
 	name: string;
 	id: string;

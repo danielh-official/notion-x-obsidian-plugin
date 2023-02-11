@@ -1,5 +1,8 @@
 import { App, Modal, Setting } from "obsidian";
 
+/**
+ * A modal for calling the Notion page api via its URL.
+ */
 export class GetNotionResourceModal extends Modal {
 	result: string;
 	onSubmit: (result: string) => void;

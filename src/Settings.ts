@@ -2,9 +2,20 @@ import Plugin from "./Plugin";
 import {App, PluginSettingTab, Setting} from "obsidian";
 
 export class Settings extends PluginSettingTab {
+
+	/**
+	 * The plugin accessor.
+	 */
 	plugin: Plugin;
 
+	/**
+	 * The homeFolder data accessor.
+	 */
 	homeFolder: string;
+
+	/**
+	 * The notionIntegrationToken data accessor.
+	 */
 	notionIntegrationToken: string;
 
 	constructor(app: App, plugin: Plugin) {
@@ -12,6 +23,11 @@ export class Settings extends PluginSettingTab {
 		this.plugin = plugin;
 	}
 
+	/**
+	 * The folder used to house Notion pages when they're synced.
+	 * @param containerEl 
+	 * @returns 
+	 */
 	private homeFolderSetting(containerEl: HTMLElement) {
 		return new Setting(containerEl)
 			.setName("Home Folder")
@@ -27,6 +43,12 @@ export class Settings extends PluginSettingTab {
 			);
 	}
 
+	/**
+	 * The setting used to house the Notion token
+	 * @param containerEl 
+	 * @returns 
+	 * @todo Make sure the text is hidden.
+	 */
 	private apiTokenSetting(containerEl: HTMLElement) {
 		return new Setting(containerEl)
 			.setName("Notion Integration Token")
@@ -42,6 +64,9 @@ export class Settings extends PluginSettingTab {
 			);
 	}
 
+	/**
+	 * Handles the display logic for the settings.
+	 */
 	display(): void {
 		const {containerEl} = this;
 
