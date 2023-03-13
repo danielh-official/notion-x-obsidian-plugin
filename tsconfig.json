@@ -22,8 +22,8 @@
 		"esModuleInterop": true,
 	},
 	"include": [
-		"src/**/*",
-		"tests/**/*",
+		"src/**/*.ts",
+		"tests/**/*.ts",
 		"main.ts"
 	],
 	"exclude": [

@@ -7,7 +7,7 @@
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
-		"test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' nyc mocha -r ts-node/register 'tests/**/*.ts'"
+		"test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts"
 	},
 	"directories": {
 		"src": "./src",
@@ -22,6 +22,7 @@
 		"@babel/preset-env": "^7.20.2",
 		"@babel/preset-typescript": "^7.18.6",
 		"@types/chai": "^4.3.4",
+		"@types/expect": "^24.3.0",
 		"@types/lodash": "^4.14.191",
 		"@types/mocha": "^10.0.1",
 		"@types/node": "^16.11.6",
@@ -34,6 +35,7 @@
 		"chai": "^4.3.7",
 		"cross-env": "^7.0.3",
 		"esbuild": "0.14.47",
+		"esm": "^3.2.25",
 		"ignore-styles": "^5.0.1",
 		"jsdom": "^20.0.3",
 		"jsdom-global": "^3.0.2",

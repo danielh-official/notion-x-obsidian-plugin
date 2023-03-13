@@ -1,14 +1,6 @@
 import * as React from "react";
 import {SplitNotionUrlInterface, PageApiBodyInterface, CommonPropertyInterface} from "../Interfaces";
 import moment from "moment";
-import {
-	wrapInStrikethrough,
-	wrapInItalic,
-	wrapInCode,
-	wrapInUnderline,
-	wrapInLink,
-	wrapInBold
-} from "../Misc/MarkdownHelpers";
 
 type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
@@ -18,7 +10,7 @@ type Entries<T> = {
  * Generates an array of properties to be used in the metadata.
  * @param pageResponseBody
  */
-const createPropertiesArray = (pageResponseBody: PageApiBodyInterface): Entries<object> => {
+export const createPropertiesArray = (pageResponseBody: PageApiBodyInterface): Entries<object> => {
 
 	// @ts-ignore
 	return Object.entries(pageResponseBody.properties);
@@ -29,7 +21,7 @@ const createPropertiesArray = (pageResponseBody: PageApiBodyInterface): Entries<
  * @param key
  * @param property
  */
-const parseProperty =
+export const parseProperty =
 	(key: string, property: CommonPropertyInterface) => {
 		if (property.type == 'multi_select' && property.multi_select) {
 			return `${key}: ${property.multi_select.map(x => x.name).join(', ')}`;
@@ -64,7 +56,7 @@ const parseProperty =
  * Creates a list of properties in the metadata.
  * @param pageResponseBody
  */
-const propertiesMetadata = (pageResponseBody: PageApiBodyInterface) => {
+export const propertiesMetadata = (pageResponseBody: PageApiBodyInterface) => {
 	if (pageResponseBody.properties) {
 		return (
 			<li key={pageResponseBody.id}>
@@ -86,7 +78,7 @@ const propertiesMetadata = (pageResponseBody: PageApiBodyInterface) => {
  * @param pageResponseBody
  * @constructor
  */
-const Metadata = (splitUrl: SplitNotionUrlInterface, pageResponseBody: PageApiBodyInterface) => {
+export const Metadata = (splitUrl: SplitNotionUrlInterface, pageResponseBody: PageApiBodyInterface) => {
 	return (
 		<div>
 			<hr/>
@@ -115,45 +107,6 @@ const Metadata = (splitUrl: SplitNotionUrlInterface, pageResponseBody: PageApiBo
 }
 
 /**
- * Parses the title from the Notion page json
- * @param pageResponseBody
- */
-const parseTitle = (pageResponseBody: PageApiBodyInterface) => {
-	let title = "";
-
-	if (pageResponseBody.properties.hasOwnProperty("Name")) {
-
-		pageResponseBody.properties.Name.title.forEach((fragment) => {
-			const text = fragment.text.content;
-
-			const link = fragment.text.link;
-
-			const annotations = fragment.annotations;
-
-			title += wrapInCode(
-				wrapInUnderline(
-					wrapInStrikethrough(
-						wrapInItalic(
-							wrapInBold(
-								wrapInLink(link, text), annotations.bold),
-							annotations.italic
-						), annotations.strikethrough), annotations.underline), annotations.code)
-		});
-
-		return title;
-
-	}
-}
-
-/**
- * Gets the cover image from the Notion page json.
- * @param pageResponseBody
- */
-const getNotionCoverImage = (pageResponseBody: PageApiBodyInterface): string => {
-	return pageResponseBody.cover ? pageResponseBody.cover?.external.url : "";
-}
-
-/**
  * Builds the body of the template.
  * @param splitUrl
  * @param pageResponseBody
@@ -163,15 +116,6 @@ export const MarkdownTemplate = (splitUrl: SplitNotionUrlInterface, pageResponse
 	return (
 		<div>
 			{Metadata(splitUrl, pageResponseBody)}
-			<p>%% startNotionTitle %%</p>
-			<h1>
-				{parseTitle(pageResponseBody)}
-			</h1>
-			<p>%% endNotionTitle %%</p>
-
-			<p>%% startNotionCoverageImage %%</p>
-			<img src={getNotionCoverImage(pageResponseBody)} alt={`Cover image for ${splitUrl.name}`}/>
-			<p>%% endNotionCoverageImage %%</p>
 		</div>
 	);
 };
