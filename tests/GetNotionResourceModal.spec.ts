@@ -1,1 +1,5 @@
-export {}
+import {describe} from "mocha";
+
+describe("GetNotionResourceModal", () => {
+
+})

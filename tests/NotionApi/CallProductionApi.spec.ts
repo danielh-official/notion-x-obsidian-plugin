@@ -6,7 +6,7 @@ import {callPageApi} from "../../src/Misc/NotionApi";
 import {assert} from "chai";
 import {proxyURL} from "../../src/Config/Config";
 
-describe("call production api", () => {
+describe("callProductionApi", () => {
 	context('calling production with success', async () => {
 		it('should return the result json', async () => {
 			const expected = pageApiSuccess;

@@ -4,12 +4,14 @@ import {assert} from "chai";
 import pageApiSuccess from "../../samples/pageApiSuccess";
 import {SplitNotionUrlInterface} from "../../src/Interfaces";
 import {callPageApi} from "../../src/Misc/NotionApi";
-describe("call postman mock api", () => {
+
+describe("calPostmanMockApi", () => {
 
 	context('calling postman mock with success',  async () => {
 		it('should return the standard json',  async () => {
 			const expected = pageApiSuccess;
 
+			process.env.MOCK_PROXY_API_PAGE_CALL_RETURN = "200";
 			process.env.MOCK_PROXY_IS_ENABLED = "true";
 			process.env.MOCK_API_SERVER_URL = "https://example.mock.pstmn.io"
 
