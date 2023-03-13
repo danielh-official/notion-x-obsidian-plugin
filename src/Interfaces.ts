@@ -10,7 +10,7 @@ export interface PageApiBodyInterface {
 		object: "user",
 		id: string,
 	};
-	lasted_edited_by: {
+	last_edited_by: {
 		object: "user",
 		id: string,
 	};
@@ -31,10 +31,10 @@ export interface PageApiBodyInterface {
 	archived: boolean | null;
 	url: string;
 	properties: {
-		Name: {
+		[key:string]: {
 			id: string;
 			type: string;
-			title: [
+			title?: [
 				{
 					annotations: {
 						bold: boolean,
@@ -44,7 +44,7 @@ export interface PageApiBodyInterface {
 						underline: boolean,
 						code: boolean
 					},
-					href: string,
+					href: string | null,
 					plain_text: string,
 					text: {
 						content: string,
@@ -52,7 +52,65 @@ export interface PageApiBodyInterface {
 					},
 					type: "text"
 				}
-			],
+			];
+			multi_select?: Array<{
+				id: string;
+				name: string;
+				color: string;
+			}>;
+			select?: {
+				id: string;
+				name: string;
+				color: string;
+			};
+			number?: number;
+			people?: Array<{
+				object: string;
+				id: string;
+				name: string;
+				avatar_url: string;
+				type: string;
+				person?: {
+					email: string;
+				}
+			}>;
+			date?: {
+				start: string;
+				end: string | null;
+				time_zone: string | null;
+			};
+			formula?: {
+				type: string;
+				number: number;
+			};
+			relation?: Array<{
+				id: string;
+			}>
+			has_more?: boolean;
+			rich_text?: Array<{
+				type: string;
+				text: {
+					content: string;
+					link: string | null;
+				};
+				annotations: {
+					bold: boolean;
+					italic: boolean;
+					strikethrough: boolean;
+					underline: boolean;
+					code: boolean;
+					color: string;
+				}
+				plain_text: string;
+				href: string | null;
+			}>;
+			checkbox?: boolean;
+			rollup?: {
+				type: string;
+				number: number;
+				function: string;
+			};
+			url?: string;
 		}
 	};
 }
